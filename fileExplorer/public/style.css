@@ -1,0 +1,22 @@
+ul {
+    list-style-type: none;
+    padding-left: 20px;
+    margin: 0;
+}
+
+li {
+    cursor: pointer;
+    margin: 5px 0;
+}
+
+.collapsible {
+    display: none;
+}
+
+.folder::before {   
+    content: "📁 ";
+}
+
+.file::before {
+    content: "📄 ";
+}

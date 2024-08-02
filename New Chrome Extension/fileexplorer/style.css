@@ -1,0 +1,11 @@
+body {
+    font-family: Arial, sans-serif;
+}
+
+#fileExplorer ul {
+    list-style-type: none;
+}
+
+.file {
+    margin: 5px 0;
+}

@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>File Explorer</title>
+
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <button id="collapse">Hide</button>
+    <div id="fileExplorer"></div>
+
+    <script>
+        const collapse = document.querySelector('#collapse');
+        const fileExplorer = document.querySelector('#fileExplorer');
+        let collapsed = false;
+
+        console.log(collapse);
+        console.log(fileExplorer);
+
+        collapse.addEventListener('click', () => {
+            if (!collapsed) {
+                console.log('Collapsing File Explorer');
+                fileExplorer.style.display = "none";
+                collapse.innerHTML = "Show";
+            }
+            else {
+                console.log('Showing File Explorer');
+                fileExplorer.style.display = "block";
+                collapse.innerHTML = "Hide";
+            }
+
+            collapsed = !collapsed;
+        })
+
+        async function fetchFileStructure() {
+            const response = await fetch('/files');
+            return response.json();
+        }
+
+        function createTree(structure) {
+            const ul = document.createElement('ul');
+
+            structure.forEach(item => {
+                const li = document.createElement('li');
+                li.textContent = item.name;
+
+                if (item.type === 'folder') {
+                    li.classList.add('folder');
+                    const childrenUl = createTree(item.children);
+                    childrenUl.classList.add('collapsible');
+                    li.appendChild(childrenUl);
+                } else {
+                    li.classList.add('file');
+                }
+
+                ul.appendChild(li);
+            });
+
+            return ul;
+        }
+
+        document.addEventListener('DOMContentLoaded', async () => {
+
+            const fileExplorer = document.getElementById('fileExplorer');
+            const fileStructure = await fetchFileStructure();
+            fileExplorer.appendChild(createTree(fileStructure));
+
+            fileExplorer.addEventListener('click', (event) => {
+                const target = event.target;
+                if (target.classList.contains('folder')) {
+                    const collapsible = target.querySelector('.collapsible');
+                    if (collapsible) {
+                        collapsible.style.display = collapsible.style.display === 'none' ? 'block' : 'none';
+                    }
+                }
+            });
+        });
+    </script>
+</body>
+
+</html>
